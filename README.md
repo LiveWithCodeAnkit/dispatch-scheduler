@@ -2,7 +2,7 @@
 
 Frontend-only scheduler for Facebook, Instagram, X, and TikTok. Compose a post, place it on a dated queue, and retry anything that failed. The app never calls a social network, never authenticates, and never publishes.
 
-Live demo: [https://fetest-alpha.vercel.app](https://fetest-alpha.vercel.app)
+Live demo: [https://dispatch-scheduler-teal.vercel.app](https://dispatch-scheduler-teal.vercel.app)
 
 ## Installation
 
@@ -151,4 +151,4 @@ npx vercel
 
 Netlify: connect the repository, set the build command to `npm run build`, and publish the Next.js output with the official Next.js runtime.
 
-The live demo is [https://fetest-alpha.vercel.app](https://fetest-alpha.vercel.app).
+The live demo is [https://dispatch-scheduler-teal.vercel.app](https://dispatch-scheduler-teal.vercel.app).
