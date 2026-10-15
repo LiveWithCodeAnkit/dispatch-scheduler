@@ -62,6 +62,13 @@ npm run lint
 - Grapheme counters, and the over-limit block
 - A post at 00:30 tomorrow in Pacific/Auckland lands under Tomorrow and is stored in UTC
 - On a 375px screen the collapsed filter button shows how many filters are active
+- Retry all retries only the failed posts in the current week
+- Changing only the platforms asks before the edit is discarded
+- Calendar stays in the URL after a refresh
+- A second Duplicate click does not add another copy
+- Saving a failed post at a future time clears the failure and marks it scheduled
+- Search from Settings opens the queue search
+- Dragging a scheduled post onto another day moves it
 
 `npm test` runs the checks and then the e2e tests. `npm run lint` runs ESLint. There is no backend.
 
@@ -73,7 +80,7 @@ npm run lint
 | `src/components/scheduler.tsx` | Queue state, URL filters, retry, and which view is open. |
 | `src/components/shell.tsx` | Sidebar, page header, and settings. |
 | `src/components/filter-bar.tsx` | Search, platform chips, status tabs, and the mobile filter sheet. |
-| `src/components/stats-strip.tsx` | Scheduled, published, failed, and draft counts for the current filters. |
+| `src/components/stats-strip.tsx` | Scheduled, published, and failed counts for the current filters, and Retry all for the failed posts on screen. |
 | `src/components/overview.tsx` | Home summary: counts, failed posts, and the next scheduled posts. |
 | `src/components/channels.tsx` | Per-platform API key, secret, and webhook. Stored in this browser only. |
 | `src/components/insights.tsx` | Publishing health, this week's results, and the media library. |
@@ -83,7 +90,7 @@ npm run lint
 | `src/components/queue-boundary.tsx` | Error boundary around the dashboard. |
 | `src/components/platform-icon.tsx` | Platform icons. |
 | `src/lib/schedule.ts` | Post type, platform limits, grouping, filtering, timezone conversion, retry outcome. |
-| `src/lib/api.ts` | Mock load, create, and retry. Reads and writes `localStorage`. |
+| `src/lib/api.ts` | Mock load, create, update, delete, duplicate, reschedule, and retry. Reads and writes `localStorage`. |
 | `public/posts.json` | 32 seeded posts. |
 | `src/app/globals.css` | Design tokens and layout. |
 
@@ -129,7 +136,7 @@ Lucide icons are used for Create post, Close, Retry, and a missing image. Platfo
 
 ## Verification
 
-Checked on 15 October 2026 in this folder:
+Last checked on 15 October 2026 in this folder. Not re-run since:
 
 - `npx tsc --noEmit --pretty false --incremental false` exited 0.
 - `npm run check` printed `schedule checks passed`.
