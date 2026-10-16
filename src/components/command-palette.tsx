@@ -103,7 +103,30 @@ function CommandDialog({
     const field = dialogRef.current?.querySelector("input")
     if (field instanceof HTMLElement) field.focus()
     function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose()
+      if (event.key === "Escape") {
+        onClose()
+        return
+      }
+      if (event.key !== "Tab") return
+      const dialog = dialogRef.current
+      if (!dialog) return
+      const focusable = [...dialog.querySelectorAll<HTMLElement>("button, input, textarea, select, a[href]")].filter(
+        (node) => {
+          if (node.hidden || node.getClientRects().length === 0) return false
+          return !("disabled" in node && Boolean((node as HTMLButtonElement).disabled))
+        },
+      )
+      if (focusable.length === 0) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      const active = document.activeElement
+      if (event.shiftKey && (active === first || !dialog.contains(active))) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && (active === last || !dialog.contains(active))) {
+        event.preventDefault()
+        first.focus()
+      }
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
@@ -131,7 +154,7 @@ function CommandDialog({
 
   return (
     <div className={styles.wrap}>
-      <button type="button" className={styles.backdrop} aria-label="Close commands" onClick={onClose} />
+      <button type="button" className={styles.backdrop} tabIndex={-1} aria-label="Close commands" onClick={onClose} />
       <div ref={dialogRef} className={styles.dialog} role="dialog" aria-modal="true" aria-label="Commands">
         <input
           value={query}

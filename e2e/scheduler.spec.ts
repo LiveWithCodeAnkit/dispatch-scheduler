@@ -5,11 +5,31 @@ async function open(page: Page, path = "/") {
   await expect(page.getByText(/^Showing \d+ of \d+$/)).toBeVisible()
 }
 
+function focusInsideCommands(page: Page) {
+  return page.evaluate(
+    () => document.querySelector('[aria-label="Commands"]')?.contains(document.activeElement) ?? false,
+  )
+}
+
 function forceRandom(page: Page, value: number) {
   return page.addInitScript((fixed) => {
     Math.random = () => fixed
   }, value)
 }
+
+test("each post menu names that post, and Tab stays inside commands", async ({ page }) => {
+  await open(page, "/?status=scheduled")
+  const card = page.locator("article").filter({ hasText: "Lunch special" })
+  await expect(card.getByRole("button", { name: /Post actions for Lunch special/ })).toBeVisible()
+  await page.getByRole("button", { name: "Commands" }).click()
+  const dialog = page.getByRole("dialog", { name: "Commands" })
+  const search = dialog.getByRole("searchbox", { name: "Command search" })
+  await expect(search).toBeFocused()
+  for (let step = 0; step < 20; step += 1) await page.keyboard.press("Tab")
+  await expect.poll(() => focusInsideCommands(page)).toBe(true)
+  await page.keyboard.press("Shift+Tab")
+  await expect.poll(() => focusInsideCommands(page)).toBe(true)
+})
 
 test("search keeps every character when typing fast", async ({ page }) => {
   await open(page)

@@ -159,7 +159,7 @@ export function PostCard({
           <button
             type="button"
             className={styles.menuButton}
-            aria-label="Post actions"
+            aria-label={`Post actions for ${clip(post.content)}`}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((open) => !open)}
           >
